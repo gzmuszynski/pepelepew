@@ -1,8 +1,18 @@
-QT += quick
-CONFIG += c++11
+#-------------------------------------------------
+#
+# Project created by QtCreator 2018-01-31T16:47:34
+#
+#-------------------------------------------------
+
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = pepelepew
+TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked deprecated (the exact warnings
+# any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -12,17 +22,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += main.cpp
 
-RESOURCES += qml.qrc
+SOURCES += \
+        main.cpp \
+        contextwindow.cpp \
+    buffer.cpp \
+    float4.cpp \
+    vertex.cpp \
+    rasterizer.cpp \
+    vertexprocessor.cpp \
+    fragmentprocessor.cpp \
+    mat4.cpp \
+    mesh.cpp \
+    trianglefunction.cpp \
+    camera.cpp \
+    postprocessor.cpp
 
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+HEADERS += \
+        contextwindow.h \
+    buffer.h \
+    float4.h \
+    vertex.h \
+    rasterizer.h \
+    vertexprocessor.h \
+    fragmentprocessor.h \
+    mat4.h \
+    mesh.h \
+    trianglefunction.h \
+    camera.h \
+    postprocessor.h
 
-# Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH =
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+FORMS += \
+        contextwindow.ui
