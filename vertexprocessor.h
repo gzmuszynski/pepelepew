@@ -25,11 +25,11 @@ public:
 
     void setIdentity();
 
-    void translate(float4 &vec);
-    void rotate   (float a, float4 &vec);
-    void scale    (float4 &vec);
+    void translate(float3 &vec);
+    void rotate   (float a, float3 &vec);
+    void scale    (float3 &vec);
 
-    void lookAt   (float4 &eye, float4 &target, float4 &up);
+    void lookAt   (float3 &eye, float3 &target, float3 &up);
     void perspective(float fov, float ratio, float zNear, float zFar);
 
     void transform();

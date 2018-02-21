@@ -19,6 +19,8 @@ public:
     float4 *depth;
     float4 *normal;
     float4 *position;
+
+    float4 *final;
 };
 
 #endif // BUFFER_H

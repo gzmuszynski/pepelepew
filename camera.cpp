@@ -5,7 +5,7 @@ Camera::Camera()
 
 }
 
-Camera::Camera(float4 pos, float4 target, float4 up, float fov, float zNear, float zFar) :
+Camera::Camera(float3 pos, float3 target, float3 up, float fov, float zNear, float zFar) :
     pos(pos),
     target(target),
     up(up),

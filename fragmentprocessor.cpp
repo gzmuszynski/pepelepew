@@ -7,8 +7,8 @@ FragmentProcessor::FragmentProcessor()
 
 void FragmentProcessor::rasterize(Buffer &buffer)
 {
-    float stepX = 2.0f/buffer.width;
-    float stepY = 2.0f/buffer.height;
+    float stepX = 1.0f/buffer.width;
+    float stepY = 1.0f/buffer.height;
 
     for(int3 &tri:triangleBuffer)
     {
@@ -16,21 +16,22 @@ void FragmentProcessor::rasterize(Buffer &buffer)
 
         float4 bounds = triangleBounds(triangle);
 
-        int minx = qFloor(bounds[0])*buffer.width;
-        int miny = qFloor(bounds[2])*buffer.height;
-        int maxx = qCeil (bounds[1])*buffer.width;
-        int maxy = qCeil (bounds[3])*buffer.height;
+        int minx = qFloor(bounds.x*0.5f+0.5f)*buffer.width;
+        int miny = qFloor(bounds.z*0.5f+0.5f)*buffer.height;
+        int maxx = qCeil (bounds.y*0.5f+0.5f)*buffer.width;
+        int maxy = qCeil (bounds.w*0.5f+0.5f)*buffer.height;
+//        int minx = 0, miny = 0, maxx = buffer.width, maxy = buffer.height;
 
         for(int x = minx; x < maxx; x++)
         {
             for(int y = miny; y < maxy; y++)
             {
-                Hit hit = tf(triangle, (x - 0.5f) * stepX, (y - 0.5f) * stepY);
+                Hit hit = tf(triangle, x * stepX - 0.5f, y * stepY - 0.5f);
 
                 if(hit.test)
                 {
                     Fragment f = fragmentShader->process(triangle, hit);
-                    if(f.depth.x > buffer.depth[x+y*buffer.width].x)
+                    if(f.depth.x < buffer.depth[x+y*buffer.width].x && f.depth.x > -1.0f)
                     {
                         buffer.color   [x+y*buffer.width] = f.color;
                         buffer.depth   [x+y*buffer.width] = f.depth;
@@ -64,10 +65,14 @@ Fragment FragmentShader::process(Vertex *&triangle, Hit &hit)
     mat4 Pi = fp->vp->Pi;
 
     float4 color    = float4(1.0f);
-    float4 normal   = float4(triangle[0].normal * hit.A[0] + triangle[1].normal * hit.A[1] + triangle[2].normal * hit.A[2]);
+    float4 normal   = float4(triangle[0].normal * hit.A[0] + triangle[1].normal * hit.A[1] + triangle[2].normal * hit.A[2], 1.0f);
     float4 position = float4(triangle[0].pos    * hit.A[0] + triangle[1].pos    * hit.A[1] + triangle[2].pos    * hit.A[2]);
-    float4 depth    = float4(position.z);
+    float4 depth    = float4((1.0f + position.z) * 0.5f);
+
+    // Inverse Perspective calculation
+
     position        = float4(position.x*Pi[0][0], position.y*Pi[1][1], -1.0f, position.z*Pi[3][2] + Pi[3][3]);
+    position /= position.w;
 
     return Fragment(color, depth, normal, position);
 }

@@ -30,13 +30,24 @@ private:
     Rasterizer rasterizer;
     QImage img;
     bool painterReady;
+    QVector<Mesh> meshes;
     // QWidget interface
+
+    bool debug = true;
 protected:
     void mousePressEvent(QMouseEvent *event);
 
     // QWidget interface
 protected:
     void paintEvent(QPaintEvent *event);
+
+    // QWidget interface
+protected:
+    void resizeEvent(QResizeEvent *event);
+
+    // QWidget interface
+protected:
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // CONTEXTWINDOW_H

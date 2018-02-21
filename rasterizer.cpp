@@ -1,15 +1,18 @@
 #include "rasterizer.h"
 
-float4 OX(1.0f, 0.0f, 0.0f);
-float4 OY(0.0f, 1.0f, 0.0f);
-float4 OZ(0.0f, 0.0f, 1.0f);
+float3 OX(1.0f, 0.0f, 0.0f);
+float3 OY(0.0f, 1.0f, 0.0f);
+float3 OZ(0.0f, 0.0f, 1.0f);
 
 Rasterizer::Rasterizer():
     vp(new VertexProcessor()),
-    fp(new FragmentProcessor())
+    fp(new FragmentProcessor()),
+    pp(new PostProcessor())
 {
     vp->vertexShader = new VertexShader(vp);
     fp->fragmentShader = new FragmentShader(fp);
+    fp->vp = vp;
+    pp->postProcesses.push_back(PostProcess());
 
 }
 
@@ -42,5 +45,6 @@ void Rasterizer::operator()(Buffer &buffer, QVector<Mesh> &meshes, Camera &camer
 
         vp->transform();
         fp->rasterize(buffer);
+        pp->process(buffer);
     }
 }

@@ -32,11 +32,11 @@ SOURCES += \
     rasterizer.cpp \
     vertexprocessor.cpp \
     fragmentprocessor.cpp \
-    mat4.cpp \
     mesh.cpp \
     trianglefunction.cpp \
     camera.cpp \
-    postprocessor.cpp
+    postprocessor.cpp \
+    cube.cpp
 
 HEADERS += \
         contextwindow.h \
@@ -50,7 +50,8 @@ HEADERS += \
     mesh.h \
     trianglefunction.h \
     camera.h \
-    postprocessor.h
+    postprocessor.h \
+    cube.h
 
 FORMS += \
         contextwindow.ui

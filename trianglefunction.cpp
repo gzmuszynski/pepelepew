@@ -24,9 +24,9 @@ Hit TriangleFunction::operator()(Vertex* &V, float x, float y)
     float BC = -CBx * (y - V[1].pos.y) - BCy * (x - V[1].pos.x);
     float CA = -ACx * yc - CAy * xc;
 
-    hit.test = ((AB > 0.0f || (AB == 0.0f && (ABy > 0.0f || (ABy == 0.0f && ABx < 0.0f)))) &&
-                (BC > 0.0f || (BC == 0.0f && (BCy > 0.0f || (BCy == 0.0f && CBx > 0.0f)))) &&
-                (CA > 0.0f || (CA == 0.0f && (CAy > 0.0f || (CAy == 0.0f && ACx > 0.0f)))) );
+    hit.test = ((AB < 0.0f || (AB == 0.0f && (ABy < 0.0f || (ABy == 0.0f && ABx < 0.0f)))) &&
+                (BC < 0.0f || (BC == 0.0f && (BCy < 0.0f || (BCy == 0.0f && CBx > 0.0f)))) &&
+                (CA < 0.0f || (CA == 0.0f && (CAy < 0.0f || (CAy == 0.0f && ACx > 0.0f)))) );
 
     if( hit.test )
     {

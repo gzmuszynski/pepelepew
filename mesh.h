@@ -15,9 +15,9 @@ public:
     QVector<Vertex> verts;
     QVector<int3> tris;
 
-    float4 Tv;
-    float4 Sv;
-    float4 Rv;
+    float3 Tv;
+    float3 Sv;
+    float3 Rv;
     
     Mesh();
     Mesh(const Mesh &orig);

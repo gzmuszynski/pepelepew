@@ -4,6 +4,7 @@
 #include "buffer.h"
 #include "camera.h"
 #include "fragmentprocessor.h"
+#include "postprocessor.h"
 #include "vertexprocessor.h"
 
 
@@ -18,6 +19,7 @@ public:
 private:
     VertexProcessor* vp;
     FragmentProcessor* fp;
+    PostProcessor* pp;
 };
 
 #endif // RASTERIZER_H
