@@ -2,6 +2,7 @@
 #define FRAGMENTPROCESSOR_H
 
 #include "buffer.h"
+#include "curvilineartrianglefunction.h"
 #include "vertexprocessor.h"
 
 class FragmentShader;
@@ -13,13 +14,14 @@ public:
 
     VertexProcessor* vp;
     FragmentShader* fragmentShader;
-    TriangleFunction tf;
+    TriangleFunction* triangleFunction;
 
     void rasterize(Buffer &buffer);
 
     float4 minmax(Vertex* &triangle);
 
-    QVector<int3> triangleBuffer;
+    QVector<int4> triangleBuffer;
+    QVector<Material> materialBuffer;
     float4 triangleBounds(Vertex *&triangle);
 };
 
@@ -43,7 +45,7 @@ class FragmentShader
 public:
     FragmentShader(FragmentProcessor* fp);
 
-    virtual Fragment process(Vertex* &triangle, Hit &hit);
+    virtual Fragment process(Vertex* &triangle, Hit &hit, Material &material);
 
 protected:
     FragmentProcessor* fp;

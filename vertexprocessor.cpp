@@ -41,7 +41,7 @@ void VertexProcessor::lookAt(float3 &eye, float3 &target, float3 &up)
 
 void VertexProcessor::perspective(float fov, float ratio, float zNear, float zFar)
 {
-    P = glm::perspective(fov, ratio, zNear, zFar);
+    P = glm::perspective(glm::radians(fov), ratio, zNear, zFar);
 
     Pi[0][0] = 1.0f/P[0][0];
     Pi[1][1] = 1.0f/P[1][1];
@@ -61,6 +61,23 @@ void VertexProcessor::transform()
     {
         vertexShader->process(v);
         //        qDebug() << v.pos.x << v.pos.y << v.pos.z;
+    }
+}
+
+void VertexProcessor::transformLights(QVector<Light> &lights)
+{
+    mat4 VT = glm::transpose(glm::inverse(V));
+    for(Light light:lights)
+    {
+        light.position = MVP * light.position;
+        if(light.position.z == 0.0f)
+            light.position.w = 0.0001f;
+        light.position    /= light.position.w;
+
+        light.position = Pi * light.position;
+        light.position    /= light.position.w;
+
+        light.direction = MVT * float4(light.direction,1.0f);
     }
 }
 

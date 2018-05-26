@@ -1,5 +1,10 @@
 #include "buffer.h"
 
+Buffer::Buffer()
+{
+
+}
+
 Buffer::Buffer(int width, int height) : width(width), height(height)
 {
     color    = new float4[width*height];

@@ -5,6 +5,7 @@
 #include <iterator>
 #include <QMap>
 #include <QtDebug>
+#include <QFileInfo>
 
 Mesh::Mesh() : Tv(0.0f), Rv(0.0f), Sv(1.0f)
 {
@@ -15,20 +16,22 @@ Mesh::Mesh(const Mesh &orig) : Tv(orig.Tv), Rv(orig.Rv), Sv(orig.Sv), verts(orig
 
 }
 
-QVector<Mesh> Mesh::fromFile(QString filename)
+QPair<QVector<Mesh>, QVector<Material>> Mesh::fromFile(QString filename)
 {
     // TO-DO
 
     QFile file(filename);
+    QFileInfo fileInfo(file);
 
     if(!file.exists())
     {
         qCritical() << "File" << filename << "missing!";
-        return QVector<Mesh>(0);
+        return QPair<QVector<Mesh>, QVector<Material>>(QVector<Mesh>(0),QVector<Material>(0));
     }
     qInfo() << "Opening" << filename;
 
-    QMap<QString, int> materials;
+    QMap<QString, int> materialsDictionary;
+    QVector<Material> materials;
     int mat = 0;
 
     QVector<Mesh> meshes(0);
@@ -51,11 +54,13 @@ QVector<Mesh> Mesh::fromFile(QString filename)
 
                 if(first == "mtllib")
                 {
-                    materials[words[1]] = mat+1;
+                    QPair<QMap<QString, int>, QVector<Material>> mtllib = Material::fromFile(fileInfo.path()+'/'+words[1].remove(words[1].length()-2,2));
+                    materialsDictionary.unite(mtllib.first);
+                    materials.append(mtllib.second);
                 }
                 if(first == "usemtl")
                 {
-                    mat = materials[words[1]];
+                    mat = materialsDictionary[words[1]];
                 }
                 if(first == "g")
                 {
@@ -64,8 +69,8 @@ QVector<Mesh> Mesh::fromFile(QString filename)
                 if(first == "v")
                 {
                     float3 pos(words[1].toFloat(),
-                            words[2].toFloat(),
-                            words[3].toFloat());
+                               words[2].toFloat(),
+                               words[3].toFloat());
 
                     poses.push_back(pos);
                 }
@@ -91,13 +96,13 @@ QVector<Mesh> Mesh::fromFile(QString filename)
                     QStringList v2 = words[2].split('/', QString::KeepEmptyParts);
                     QStringList v3 = words[3].split('/', QString::KeepEmptyParts);
 
-                    int3 pos{v1[0].toInt(),
+                    int4 pos{v1[0].toInt(),
                              v2[0].toInt(),
                              v3[0].toInt()};
 
-                    int3 verts{meshes.last().verts.size(),
+                    int4 verts{meshes.last().verts.size(),
                                meshes.last().verts.size()+1,
-                               meshes.last().verts.size()+2};
+                               meshes.last().verts.size()+2, mat};
 
                     meshes.last().verts.push_back(Vertex(poses[pos.a], normals[v1[2].toInt()], coords[v1[1].toInt()]));
                     meshes.last().verts.push_back(Vertex(poses[pos.b], normals[v2[2].toInt()], coords[v2[1].toInt()]));
@@ -115,5 +120,5 @@ QVector<Mesh> Mesh::fromFile(QString filename)
             }
         }
     }
-    return meshes;
+    return QPair<QVector<Mesh>, QVector<Material>>(meshes, materials);
 }

@@ -2,6 +2,8 @@
 #define CONTEXTWINDOW_H
 
 #include "buffer.h"
+#include "light.h"
+#include "mrtrasterizer.h"
 #include "rasterizer.h"
 
 #include <QGraphicsView>
@@ -27,10 +29,12 @@ private:
     Ui::ContextWindow *ui;
     QPainter *painter;
     QList<Buffer> buffers;
-    Rasterizer rasterizer;
+    MRTRasterizer rasterizer;
     QImage img;
     bool painterReady;
     QVector<Mesh> meshes;
+    QVector<Material> materials;
+    QVector<Light> lights;
     // QWidget interface
 
     bool debug = true;

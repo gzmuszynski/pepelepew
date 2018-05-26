@@ -36,7 +36,18 @@ SOURCES += \
     trianglefunction.cpp \
     camera.cpp \
     postprocessor.cpp \
-    cube.cpp
+    cube.cpp \
+    light.cpp \
+    deferredshading.cpp \
+    curvilineartrianglefunction.cpp \
+    noperspectivevertexshader.cpp \
+    curvilinearvertexshader.cpp \
+    barreldistortionpostprocess.cpp \
+    material.cpp \
+    sphericalvertexshader.cpp \
+    curvilinearvertexshader2.cpp \
+    mrtrasterizer.cpp \
+    cubicprojection.cpp
 
 HEADERS += \
         contextwindow.h \
@@ -51,7 +62,18 @@ HEADERS += \
     trianglefunction.h \
     camera.h \
     postprocessor.h \
-    cube.h
+    cube.h \
+    light.h \
+    deferredshading.h \
+    curvilineartrianglefunction.h \
+    noperspectivevertexshader.h \
+    curvilinearvertexshader.h \
+    barreldistortionpostprocess.h \
+    material.h \
+    sphericalvertexshader.h \
+    curvilinearvertexshader2.h \
+    mrtrasterizer.h \
+    cubicprojection.h
 
 FORMS += \
         contextwindow.ui

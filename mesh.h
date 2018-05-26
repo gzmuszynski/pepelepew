@@ -1,19 +1,21 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "material.h"
 #include "trianglefunction.h"
 
 #include <QVector>
 
-struct int3{
+struct int4{
     int a, b, c;
+    int m = 0;
 };
 
 class Mesh
 {
 public:
     QVector<Vertex> verts;
-    QVector<int3> tris;
+    QVector<int4> tris;
 
     float3 Tv;
     float3 Sv;
@@ -22,7 +24,7 @@ public:
     Mesh();
     Mesh(const Mesh &orig);
 
-    static QVector<Mesh> fromFile(QString filename);
+    static QPair<QVector<Mesh>, QVector<Material> > fromFile(QString filename);
 };
 
 #endif // MESH_H

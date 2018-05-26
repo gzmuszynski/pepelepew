@@ -3,15 +3,23 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QKeyEvent>
+#include <QTime>
 
 ContextWindow::ContextWindow(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ContextWindow)
+    ui(new Ui::ContextWindow),
+    rasterizer()
 {
     ui->setupUi(this);
     img = QImage(this->contentsRect().width(),this->contentsRect().height(),QImage::Format_ARGB32);
     QString filename = QFileDialog::getOpenFileName(this,"Open scene", ".", "Wavefront OBJ (*.obj)");
-    meshes = Mesh::fromFile(filename);
+    QPair<QVector<Mesh>, QVector<Material>> obj = Mesh::fromFile(filename);
+    meshes = obj.first;
+    materials = obj.second;
+    lights.push_back(Light(float4(0.0f,0.0f,0.0f,1.0f)));
+    lights[0].ambient = float3(1.0f,1.0f,1.0f);
+    lights[0].diffuse = float3(0.0f,0.0f,0.0f);
+    lights[0].specular = float3(0.0f,0.0f,0.0f);
 }
 
 ContextWindow::~ContextWindow()
@@ -32,13 +40,17 @@ void ContextWindow::render()
 void ContextWindow::drawNextFrame()
 {
     painterReady = false;
-    Camera camera(float3(0.0f,0.0f,1.0f), float3(0.0f,0.0f,-0.5f), float3(0.0f,1.0f,0.0f), 30.0f, 1.0f, 2.0f);
+    Camera camera(float3(0.0f,0.0f,0.0f), float3(0.0f,1.0f,0.0f), float3(0.0f,0.0f,1.0f), 300.0f, 0.5f, 5.0f);
 
     //    meshes[1].Tv += float3(0.0f,0.0f,0.0f);
 //        meshes[1].Rv += float3(0.0f,10.0f,0.0f);
     //    meshes[1].Sv = float4(1.0f,1.0f,1.0f);
 
-    rasterizer(buffers[0], meshes, camera);
+    QTime before = QTime::currentTime();
+    rasterizer(buffers[0], meshes, camera, materials, lights);
+    int elapsed = before.msecsTo(QTime::currentTime());
+
+    qDebug() << QString("Frame time: %1ms").arg(elapsed);
     int halfW = img.width()  * 0.5f;
     int halfH = img.height() * 0.5f;
     if(debug)
@@ -46,10 +58,10 @@ void ContextWindow::drawNextFrame()
         for(int x = 0; x < halfW; x++)
             for(int y = 0; y < halfH; y++)
             {
-                img.setPixelColor(halfW-x-1,       y,       QColor(toColor(buffers[0].color         [x*2+y*2*img.width()])));
-                img.setPixelColor(halfW-x-1,       halfH+y, QColor(toColor(buffers[0].depth         [x*2+y*2*img.width()])));
-                img.setPixelColor(img.width()-x-1, y,       QColor(normalToColor(buffers[0].normal  [x*2+y*2*img.width()])));
-                img.setPixelColor(img.width()-x-1, halfH+y, QColor(toColor(buffers[0].position[x*2+y*2*img.width()]*2.0f)));
+                img.setPixelColor(x,       halfH -y-1,       QColor(toColor(buffers[0].color         [x*2+y*2*img.width()])));
+                img.setPixelColor(x,       img.height()-y-1, QColor(toColor(buffers[0].depth         [x*2+y*2*img.width()])));
+                img.setPixelColor(halfW+x, halfH-y-1,       QColor(normalToColor(buffers[0].normal  [x*2+y*2*img.width()])));
+                img.setPixelColor(halfW+x, img.height()-y-1, QColor(toColor(buffers[0].position      [x*2+y*2*img.width()])));
             }
     }
     else
@@ -57,7 +69,7 @@ void ContextWindow::drawNextFrame()
         for(int x = 0; x < img.width(); x++)
             for(int y = 0; y < img.height(); y++)
             {
-                img.setPixelColor(img.width()-x-1, y, QColor(toColor(buffers[0].final[x+y*img.width()])));
+                img.setPixelColor(x, img.height()-y-1, QColor(toColor(buffers[0].final[x+y*img.width()])));
 
                 //            img.setPixelColor(x,y,QColor(qrand()%256,qrand()%256,qrand()%256));
             }
@@ -101,5 +113,13 @@ void ContextWindow::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_Space: { debug = !debug; drawNextFrame(); break;}
+    case Qt::Key_S:
+    {
+        QString filename = QFileDialog::getSaveFileName(this, "Zapisz obraz", NULL, "Portable Network Graphics (*.png)");
+        if(!filename.isNull())
+        {
+            img.save(filename);
+        }
+    }
     }
 }

@@ -8,6 +8,7 @@
 class Buffer
 {
 public:
+    Buffer();
     Buffer(int width, int height);
 
     void clear();

@@ -16,7 +16,7 @@ class PostProcessor
 public:
     PostProcessor();
 
-    QVector<PostProcess> postProcesses;
+    QVector<PostProcess*> postProcesses;
 
     void process(Buffer &buffer);
 };
