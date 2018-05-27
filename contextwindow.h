@@ -17,7 +17,7 @@ class ContextWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit ContextWindow(QWidget *parent = 0);
+    explicit ContextWindow(QWidget *parent = 0, float fov = 150.0f, bool useMRT = false, int param1 = 0, int param2 = 0);
     ~ContextWindow();
     void render();
 
@@ -29,7 +29,7 @@ private:
     Ui::ContextWindow *ui;
     QPainter *painter;
     QList<Buffer> buffers;
-    MRTRasterizer rasterizer;
+    Rasterizer *rasterizer;
     QImage img;
     bool painterReady;
     QVector<Mesh> meshes;
@@ -37,6 +37,7 @@ private:
     QVector<Light> lights;
     // QWidget interface
 
+    float fov;
     bool debug = true;
 protected:
     void mousePressEvent(QMouseEvent *event);

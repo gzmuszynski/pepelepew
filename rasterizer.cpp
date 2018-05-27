@@ -5,28 +5,29 @@
 #include "barreldistortionpostprocess.h"
 #include "sphericalvertexshader.h"
 #include "curvilinearvertexshader2.h"
+#include "barreldistortiontanpostprocess.h"
 
 float3 OX(1.0f, 0.0f, 0.0f);
 float3 OY(0.0f, 1.0f, 0.0f);
 float3 OZ(0.0f, 0.0f, 1.0f);
 
-Rasterizer::Rasterizer():
+Rasterizer::Rasterizer(int vertexShader, int post):
     vp(new VertexProcessor()),
     fp(new FragmentProcessor()),
     pp(new PostProcessor()),
     ds(new DeferredShading())
 {
-    int vs = 0;
+    int vs = vertexShader;
     int fs = 0;
     int tf = 0;
-    int ps = 0;
+    int ps = post;
 
     switch(vs)
     {
-    case 1 : {vp->vertexShader = new NoPerspectiveVertexShader(vp); break;}
+//    case 1 : {vp->vertexShader = new NoPerspectiveVertexShader(vp); break;}
     case 2 : {vp->vertexShader = new CurvilinearVertexShader(vp);   break;}
     case 3 : {vp->vertexShader = new SphericalVertexShader(vp); break;}
-    case 4 : {vp->vertexShader = new CurvilinearVertexShader2(vp);   break;}
+//    case 4 : {vp->vertexShader = new CurvilinearVertexShader2(vp);   break;}
 
     default: {vp->vertexShader = new VertexShader(vp);              break;}
     }
@@ -45,6 +46,7 @@ Rasterizer::Rasterizer():
     switch(ps)
     {
     case 1: { pp->postProcesses.push_back(new BarrelDistortionPostProcess()); break;}
+    case 2: { pp->postProcesses.push_back(new BarrelDistortionTanPostProcess()); break;}
     default: {break;}
     }
 

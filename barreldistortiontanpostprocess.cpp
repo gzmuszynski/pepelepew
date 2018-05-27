@@ -1,11 +1,11 @@
-#include "barreldistortionpostprocess.h"
+#include "barreldistortiontanpostprocess.h"
 
-BarrelDistortionPostProcess::BarrelDistortionPostProcess()
+BarrelDistortionTanPostProcess::BarrelDistortionTanPostProcess()
 {
 
 }
 
-void BarrelDistortionPostProcess::operator ()(Buffer &buffer)
+void BarrelDistortionTanPostProcess::operator ()(Buffer &buffer)
 {
     float str = 0.5f;
 
@@ -33,8 +33,8 @@ void BarrelDistortionPostProcess::operator ()(Buffer &buffer)
 
             float theta = glm::atan(s,t);
             float radius = glm::length(glm::vec2(s,t));
-            radius = glm::pow(radius,str+1); // lens function
-//            radius = glm::tan(radius)*str; // lens function
+//            radius = glm::pow(radius,str+1); // lens function
+            radius = glm::tan(radius)*str; // lens function
 
             float u = radius * glm::cos(theta);
             float v = radius * glm::sin(theta);

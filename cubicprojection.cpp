@@ -15,8 +15,8 @@ QVector<Buffer> CubicProjection::render(Buffer &buffer, QVector<Mesh> &meshes, C
     float3 OY(0.0f, 1.0f, 0.0f);
     float3 OZ(0.0f, 0.0f, 1.0f);
 
-    int w = 200;
-    int h = 200;
+    int w = 512;
+    int h = w;
 
     float fov = camera.fov;
 
@@ -197,14 +197,14 @@ void CubicProjection::project(QVector<Buffer> &renderTargets, Buffer &frameBuffe
                 if (xa == 1)
                 {
                     //Right
-                    i = 0;
+                    i = 1;
                     x2 = (int)((((za + 1.0f) / 2.0f) - 1.0f) * cubeSize);
                     y2 = (int)((((ya + 1.0f) / 2.0f)) * cubeSize);
                 }
                 else if (xa == -1)
                 {
                     //Left
-                    i = 1;
+                    i = 0;
                     x2 = (int)((((za + 1.0f) / 2.0f)) * cubeSize);
                     y2 = (int)((((ya + 1.0f) / 2.0f)) * cubeSize);
                 }
@@ -212,27 +212,27 @@ void CubicProjection::project(QVector<Buffer> &renderTargets, Buffer &frameBuffe
                 {
                     //Up
                     i = 4;
-                    x2 = (int)((((xa + 1.0f) / 2.0f) - 1.0f) * cubeSize);
-                    y2 = (int)((((za + 1.0f) / 2.0f)) * cubeSize);
+                    x2 = (int)((((xa + 1.0f) / 2.0f)) * cubeSize);
+                    y2 = (int)((((za + 1.0f) / 2.0f)- 1.0f) * cubeSize);
                 }
                 else if (ya == -1)
                 {
                     //Down
                     i = 5;
-                    x2 = (int)((((xa + 1.0f) / 2.0f) - 1.0f) * cubeSize);
-                    y2 = (int)((((za + 1.0f) / 2.0f) - 1.0f) * cubeSize);
+                    x2 = (int)((((xa + 1.0f) / 2.0f)) * cubeSize);
+                    y2 = (int)((((za + 1.0f) / 2.0f)) * cubeSize);
                 }
                 else if (za == 1)
                 {
                     //Front
-                    i = 2;
+                    i = 3;
                     x2 = (int)((((xa + 1.0f) / 2.0f)) * cubeSize);
                     y2 = (int)((((ya + 1.0f) / 2.0f)) * cubeSize);
                 }
                 else if (za == -1)
                 {
                     //Back
-                    i = 3;
+                    i = 2;
                     x2 = (int)((((xa + 1.0f) / 2.0f) - 1.0f) * cubeSize);
                     y2 = (int)((((ya + 1.0f) / 2.0f)) * cubeSize);
                 }

@@ -5,11 +5,19 @@
 #include <QKeyEvent>
 #include <QTime>
 
-ContextWindow::ContextWindow(QWidget *parent) :
+ContextWindow::ContextWindow(QWidget *parent, float fov, bool useMRT, int param1, int param2) :
     QWidget(parent),
     ui(new Ui::ContextWindow),
-    rasterizer()
+    fov(fov)
 {
+    if(useMRT)
+    {
+        rasterizer = new MRTRasterizer(param1);
+    }
+    else
+    {
+        rasterizer = new Rasterizer(param1, param2);
+    }
     ui->setupUi(this);
     img = QImage(this->contentsRect().width(),this->contentsRect().height(),QImage::Format_ARGB32);
     QString filename = QFileDialog::getOpenFileName(this,"Open scene", ".", "Wavefront OBJ (*.obj)");
@@ -40,14 +48,14 @@ void ContextWindow::render()
 void ContextWindow::drawNextFrame()
 {
     painterReady = false;
-    Camera camera(float3(0.0f,0.0f,0.0f), float3(0.0f,1.0f,0.0f), float3(0.0f,0.0f,1.0f), 300.0f, 0.5f, 5.0f);
+    Camera camera(float3(0.0f,0.0f,0.0f), float3(0.0f,1.0f,0.0f), float3(0.0f,0.0f,1.0f), fov, 0.5f, 5.0f);
 
     //    meshes[1].Tv += float3(0.0f,0.0f,0.0f);
 //        meshes[1].Rv += float3(0.0f,10.0f,0.0f);
     //    meshes[1].Sv = float4(1.0f,1.0f,1.0f);
 
     QTime before = QTime::currentTime();
-    rasterizer(buffers[0], meshes, camera, materials, lights);
+    rasterizer->operator ()(buffers[0], meshes, camera, materials, lights);
     int elapsed = before.msecsTo(QTime::currentTime());
 
     qDebug() << QString("Frame time: %1ms").arg(elapsed);

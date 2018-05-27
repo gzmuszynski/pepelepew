@@ -110,9 +110,9 @@ float4 sample2DTexture(float u, float v, QImage *image)
             double t = v - qFloor(v);
 
             int x = s * (image->width()-1);
-            int y = image->height() -t * (image->height())- 1;
+            int y = (1.0f-t) * (image->height()-1);
 
-            if(x>0 && y>0)
+            if(x>=0 && y>=0)
             {
 //                if(s < 0.25 && t < 0.25)
 //                {

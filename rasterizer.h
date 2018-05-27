@@ -14,7 +14,7 @@
 class Rasterizer
 {
 public:
-    Rasterizer();
+    Rasterizer(int vertexShader = 0, int postProcess = 0);
     Rasterizer(QVector<Light> &lights);
 
     virtual void operator()(Buffer &buffer, QVector<Mesh> &meshes, Camera &camera, QVector<Material> &materials, QVector<Light> &lights);

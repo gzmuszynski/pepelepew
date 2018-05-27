@@ -47,7 +47,8 @@ SOURCES += \
     sphericalvertexshader.cpp \
     curvilinearvertexshader2.cpp \
     mrtrasterizer.cpp \
-    cubicprojection.cpp
+    cubicprojection.cpp \
+    barreldistortiontanpostprocess.cpp
 
 HEADERS += \
         contextwindow.h \
@@ -73,7 +74,8 @@ HEADERS += \
     sphericalvertexshader.h \
     curvilinearvertexshader2.h \
     mrtrasterizer.h \
-    cubicprojection.h
+    cubicprojection.h \
+    barreldistortiontanpostprocess.h
 
 FORMS += \
         contextwindow.ui
