@@ -2,7 +2,9 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <QImage>
 
-CubicProjection::CubicProjection(MRTRasterizer *R): MRTProjection(R)
+CubicProjection::CubicProjection(MRTRasterizer *R, int cubeSize):
+    MRTProjection(R),
+    cubeSize(cubeSize)
 {
 
 }
@@ -15,7 +17,7 @@ QVector<Buffer> CubicProjection::render(Buffer &buffer, QVector<Mesh> &meshes, C
     float3 OY(0.0f, 1.0f, 0.0f);
     float3 OZ(0.0f, 0.0f, 1.0f);
 
-    int w = 512;
+    int w = cubeSize;
     int h = w;
 
     float fov = camera.fov;
@@ -99,18 +101,10 @@ void CubicProjection::project(QVector<Buffer> &renderTargets, Buffer &frameBuffe
 {
     bool debug = false;
 
-    int cubeSize = renderTargets[0].width;
-
 
     if(debug)
     {
         int w = frameBuffer.width;
-        int h = frameBuffer.height;
-        QImage cubeFinal   (w,h,QImage::Format_ARGB32);
-        QImage cubeColor   (w,h,QImage::Format_ARGB32);
-        QImage cubeNormal  (w,h,QImage::Format_ARGB32);
-        QImage cubeDepth   (w,h,QImage::Format_ARGB32);
-        QImage cubePosition(w,h,QImage::Format_ARGB32);
 
         for(int i = 0; i < renderTargets.size(); i++)
         {

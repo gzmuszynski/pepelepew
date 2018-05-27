@@ -12,7 +12,7 @@ ContextWindow::ContextWindow(QWidget *parent, float fov, bool useMRT, int param1
 {
     if(useMRT)
     {
-        rasterizer = new MRTRasterizer(param1);
+        rasterizer = new MRTRasterizer(param1, param2);
     }
     else
     {

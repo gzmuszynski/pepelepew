@@ -8,7 +8,7 @@ class MRTProjection;
 class MRTRasterizer : public Rasterizer
 {
 public:
-    MRTRasterizer(int projectionPieces = 0);
+    MRTRasterizer(int projection = 0, int projectionPieces = 512);
 
     // Rasterizer interface
 public:

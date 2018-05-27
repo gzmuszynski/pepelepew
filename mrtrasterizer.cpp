@@ -4,7 +4,7 @@
 
 
 
-MRTRasterizer::MRTRasterizer(int projectionPieces)
+MRTRasterizer::MRTRasterizer(int projection, int projectionPieces)
 
 {
     vp = new VertexProcessor();
@@ -17,11 +17,10 @@ MRTRasterizer::MRTRasterizer(int projectionPieces)
     fp->vp = vp;
     fp->triangleFunction = new TriangleFunction();
 
-    int projection = projectionPieces;
     switch(projection)
     {
-    case 0 : {mp = new CubicProjection(this); break;}
-    default: {mp = new MRTProjection(this, projection); break;}
+    case 0 : {mp = new CubicProjection(this, projectionPieces); break;}
+    default: {mp = new MRTProjection(this, projectionPieces); break;}
     }
 }
 
